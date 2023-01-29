@@ -22,7 +22,7 @@ const Navigation = () => {
             SHOP
           </NavLink>
           <NavLink
-            to="/sign-in"
+            to="/auth"
             className="nav-link"
             style={({ isActive }) => (isActive ? activeStyle : undefined)}
           >
