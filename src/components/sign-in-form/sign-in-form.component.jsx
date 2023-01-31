@@ -3,7 +3,6 @@ import "./sign-in-form.styles.scss";
 import Button from "../button/button.component";
 import FormInput from "../form-input/form-input.component";
 import {
-  createUserDocumentFromAuth,
   signinAuthUserWithEmailAndPassword,
   signInWithGooglePopup,
 } from "../../utils/firebase/firebase.utils";
@@ -25,12 +24,8 @@ const SignInForm = () => {
   const submitHandler = async (event) => {
     event.preventDefault();
     try {
-      const { user } = await signinAuthUserWithEmailAndPassword(
-        email,
-        password
-      );
+      await signinAuthUserWithEmailAndPassword(email, password);
       setFormFields(defaultFormFields);
-      console.log(user);
     } catch (error) {
       if (
         error.code === "auth/wrong-password" ||
@@ -44,9 +39,7 @@ const SignInForm = () => {
   };
 
   const signInWithGoogle = async () => {
-    const { user } = await signInWithGooglePopup();
-    const userDocRef = await createUserDocumentFromAuth(user);
-    console.log(userDocRef);
+    await signInWithGooglePopup();
   };
 
   return (
