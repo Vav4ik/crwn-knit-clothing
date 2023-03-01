@@ -5,10 +5,15 @@ import { useParams } from "react-router-dom";
 import { CategoryContainer, CategoryTitle } from "./category.styles";
 
 import ProductCard from "../../components/product-card/product-card.component";
-import { selectCategoriesMap } from "../../store/categories/categories.selector";
+import Spinner from "../../components/spinner/spinner.component";
+import {
+  selectCategoriesIsLoading,
+  selectCategoriesMap,
+} from "../../store/categories/categories.selector";
 
 const Category = () => {
   const { category } = useParams();
+  const isLoading = useSelector(selectCategoriesIsLoading);
   const categoriesMap = useSelector(selectCategoriesMap);
 
   const [products, setProducts] = useState(categoriesMap[category]);
@@ -20,12 +25,16 @@ const Category = () => {
   return (
     <Fragment>
       <CategoryTitle>{category.toUpperCase()}</CategoryTitle>
-      <CategoryContainer>
-        {products &&
-          products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-      </CategoryContainer>
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <CategoryContainer>
+          {products &&
+            products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+        </CategoryContainer>
+      )}
     </Fragment>
   );
 };
