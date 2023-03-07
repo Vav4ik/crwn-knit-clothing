@@ -61,6 +61,19 @@ export const signOutUser = async () => await signOut(auth);
 export const onAuthStateChangedListener = (callback) =>
   onAuthStateChanged(auth, callback);
 
+export const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      (userAuth) => {
+        unsubscribe();
+        resolve(userAuth);
+      },
+      reject
+    );
+  });
+};
+
 //Firestore DB
 export const db = getFirestore(firebaseApp);
 
@@ -88,7 +101,7 @@ export const getCategoriesAndDocuments = async () => {
 
 export const createUserDocumentFromAuth = async (
   userAuth,
-  additionalInfo = {}
+  additionalDetails = {}
 ) => {
   const userDocRef = doc(db, "users", userAuth.uid);
 
@@ -103,12 +116,12 @@ export const createUserDocumentFromAuth = async (
         displayName,
         email,
         createdAt,
-        ...additionalInfo,
+        ...additionalDetails,
       });
     } catch (error) {
       console.log("Error creating the user", error.message);
     }
   }
 
-  return userDocRef;
+  return userSnapShot;
 };
