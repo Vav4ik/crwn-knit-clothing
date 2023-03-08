@@ -118,6 +118,8 @@ export const createUserDocumentFromAuth = async (
         createdAt,
         ...additionalDetails,
       });
+      const userSnapShot = await getDoc(userDocRef);
+      return userSnapShot;
     } catch (error) {
       console.log("Error creating the user", error.message);
     }
