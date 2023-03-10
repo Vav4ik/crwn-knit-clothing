@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { SignUpContainer } from "./sign-up-form.styles";
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
-import { signUpStart } from "../../store/user/user.action";
+import { signUpStart } from "../../store/user/user.reducer";
 
 const defaultFormFields = {
   displayName: "",
@@ -29,7 +29,7 @@ const SignUpForm = () => {
       alert("Password and Confirm Password Do not match");
       return;
     }
-    dispatch(signUpStart(email, password, displayName));
+    dispatch(signUpStart({email, password, displayName}));
     setFormFields(defaultFormFields);
   };
 

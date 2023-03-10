@@ -7,7 +7,7 @@ import FormInput from "../form-input/form-input.component";
 import {
   emailSignInStart,
   googleSignInStart,
-} from "../../store/user/user.action";
+} from "../../store/user/user.reducer";
 
 const defaultFormFields = {
   email: "",
@@ -28,7 +28,7 @@ const SignInForm = () => {
   const submitHandler = async (event) => {
     event.preventDefault();
     try {
-      dispatch(emailSignInStart(email, password));
+      dispatch(emailSignInStart({ email, password }));
       setFormFields(defaultFormFields);
     } catch (error) {
       if (

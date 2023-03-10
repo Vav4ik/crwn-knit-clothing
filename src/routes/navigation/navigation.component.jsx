@@ -15,7 +15,7 @@ import CartDropdown from "../../components/cart-dropdown/cart-dropdown.component
 
 import { selectCurrentUser } from "../../store/user/user.selector";
 import { selectIsCartOpen } from "../../store/cart/cart.selector";
-import { signOutStart } from "../../store/user/user.action";
+import { signOutStart } from "../../store/user/user.reducer";
 
 const Navigation = () => {
   const dispatch = useDispatch()
@@ -30,6 +30,7 @@ const Navigation = () => {
       <NavigationContainer>
         <LogoContainer to="/">
           <CrwnLogo className="logo" />
+          <p>{currentUser && currentUser.displayName}</p>
         </LogoContainer>
         <NavLinks>
           <NavgationLink to="/shop">SHOP</NavgationLink>
