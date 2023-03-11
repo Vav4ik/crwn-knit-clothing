@@ -15,7 +15,7 @@ import CartDropdown from "../../components/cart-dropdown/cart-dropdown.component
 
 import { selectCurrentUser } from "../../store/user/user.selector";
 import { selectIsCartOpen } from "../../store/cart/cart.selector";
-import { signOutStart } from "../../store/user/user.reducer";
+import { signOutStart } from "../../store/user/user.slice";
 
 const Navigation = () => {
   const dispatch = useDispatch()

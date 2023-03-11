@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { SignUpContainer } from "./sign-up-form.styles";
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
-import { signUpStart } from "../../store/user/user.reducer";
+import { signUpStart } from "../../store/user/user.slice";
 
 const defaultFormFields = {
   displayName: "",

@@ -42,9 +42,10 @@ const middlewares = [
 // );
 export const store = configureStore({
   reducer: rootReducer,
-  middleware: middlewares
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(middlewares),
 });
 
-sagaMiddleware.run(rootSaga)
+sagaMiddleware.run(rootSaga);
 
 // export const persistor = persistStore(store);

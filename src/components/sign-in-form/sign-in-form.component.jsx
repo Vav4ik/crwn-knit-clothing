@@ -7,7 +7,7 @@ import FormInput from "../form-input/form-input.component";
 import {
   emailSignInStart,
   googleSignInStart,
-} from "../../store/user/user.reducer";
+} from "../../store/user/user.slice";
 
 const defaultFormFields = {
   email: "",

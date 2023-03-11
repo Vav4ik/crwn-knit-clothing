@@ -15,7 +15,7 @@ import {
   signOutSuccess,
   signUpFailed,
   signUpSuccess,
-} from "./user.reducer";
+} from "./user.slice";
 
 export function* getSnapshotFromUserAuth(userAuth, additionalDetails) {
   try {
@@ -26,7 +26,7 @@ export function* getSnapshotFromUserAuth(userAuth, additionalDetails) {
     );
     yield put(signInSuccess({ id: userSnapShot.id, ...userSnapShot.data() }));
   } catch (error) {
-    yield put(signInFailed(error));
+    yield put(signInFailed(error.message));
   }
 }
 
@@ -35,12 +35,11 @@ export function* signInWithGoogle() {
     const { user } = yield call(signInWithGooglePopup);
     yield call(getSnapshotFromUserAuth, user);
   } catch (error) {
-    yield put(signInFailed(error));
+    yield put(signInFailed(error.message));
   }
 }
 
 export function* signInWithEmail({ payload: { email, password } }) {
-  console.log("run", email, password);
   try {
     const { user } = yield call(
       signinAuthUserWithEmailAndPassword,
@@ -49,7 +48,7 @@ export function* signInWithEmail({ payload: { email, password } }) {
     );
     yield call(getSnapshotFromUserAuth, user);
   } catch (error) {
-    yield put(signInFailed(error));
+    yield put(signInFailed(error.message));
   }
 }
 
@@ -59,7 +58,7 @@ export function* isUserAuthenticated() {
     if (!userAuth) return;
     yield call(getSnapshotFromUserAuth, userAuth);
   } catch (error) {
-    yield signInFailed(error);
+    yield signInFailed(error.message);
   }
 }
 
@@ -70,14 +69,17 @@ export function* signUp({ payload: { email, password, displayName } }) {
       email,
       password
     );
-    yield put(signUpSuccess({ user, additionalDetails: { displayName } }));
+    const userData =
+      user &&
+      (({ uid, accessToken, email }) => ({ uid, accessToken, email }))(user);
+    yield put(signUpSuccess({ userData, additionalDetails: { displayName } }));
   } catch (error) {
-    yield put(signUpFailed(error));
+    yield put(signUpFailed(error.message));
   }
 }
 
-export function* signInAfterSignUp({ payload: { user, additionalDetails } }) {
-  yield call(getSnapshotFromUserAuth, user, additionalDetails);
+export function* signInAfterSignUp({ payload: { userData, additionalDetails } }) {
+  yield call(getSnapshotFromUserAuth, userData, additionalDetails);
 }
 
 export function* signOut() {
@@ -85,7 +87,7 @@ export function* signOut() {
     yield call(signOutUser);
     yield put(signOutSuccess());
   } catch (error) {
-    yield put(signOutFailed(error));
+    yield put(signOutFailed(error.message));
   }
 }
 
