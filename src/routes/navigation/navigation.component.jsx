@@ -30,13 +30,12 @@ const Navigation = () => {
       <NavigationContainer>
         <LogoContainer to="/">
           <CrwnLogo className="logo" />
-          <p>{currentUser && currentUser.displayName}</p>
         </LogoContainer>
         <NavLinks>
           <NavgationLink to="/shop">SHOP</NavgationLink>
           {currentUser ? (
             <NavgationLink as="span" onClick={signOutUser}>
-              SIGN OUT
+              {currentUser.displayName} - SIGN OUT
             </NavgationLink>
           ) : (
             <NavgationLink to="/auth">SIGN IN</NavgationLink>
