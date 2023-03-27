@@ -1,5 +1,4 @@
 import { configureStore } from "@reduxjs/toolkit";
-import logger from "redux-logger";
 import {
   persistStore,
   persistReducer,
@@ -26,10 +25,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const sagaMiddleware = createSagaMiddleware();
 
-const middlewares = [
-  process.env.NODE_ENV !== "production" && logger,
-  sagaMiddleware,
-].filter(Boolean);
+const middlewares = [sagaMiddleware];
 
 export const store = configureStore({
   reducer: persistedReducer,
@@ -39,8 +35,15 @@ export const store = configureStore({
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }).concat(middlewares),
+    devTools: process.env.NODE_ENV !== 'production',
 });
 
 sagaMiddleware.run(rootSaga);
 
+//state persistor
 export const persistor = persistStore(store);
+
+// Infer the `RootState` and `AppDispatch` types from the store itself
+// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

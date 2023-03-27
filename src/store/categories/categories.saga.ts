@@ -5,14 +5,15 @@ import {
   fetchCategoriesFailed,
   fetchCategoriesSuccess,
 } from "./categories.slice";
+import { CategoryType } from "./categories.types";
 
 export function* fetchCategoriesAsync() {
   try {
     //passing parameter "categories", just to show how to pass a parameter/argument in this case
-    const categoriesArray = yield call(getCategoriesAndDocuments, "categories");
+    const categoriesArray: CategoryType[] = yield call(getCategoriesAndDocuments, "categories");
     yield put(fetchCategoriesSuccess(categoriesArray));
-  } catch (error) {
-    yield put(fetchCategoriesFailed(error.message));
+  } catch (error: unknown) {
+    yield put(fetchCategoriesFailed("Something didn't go well :("));
   }
 }
 
