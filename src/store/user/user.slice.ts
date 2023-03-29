@@ -1,6 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
+import type { PayloadAction } from "@reduxjs/toolkit";
 
-const INITIAL_STATE = {
+import { SignAfterSignUpInType, UserStatedata } from "./user.types";
+
+// Define a type for the slice state
+interface UserState {
+  currentUser: UserStatedata | null;
+  isLoading: boolean;
+  error: Error | null;
+}
+
+const INITIAL_STATE: UserState = {
   currentUser: null,
   isLoading: false,
   error: null,
@@ -22,13 +32,13 @@ export const userSlice = createSlice({
     signUpStart(state) {
       state.isLoading = true;
     },
-    signUpSuccess(state) {
+    signUpSuccess(state, action: PayloadAction<SignAfterSignUpInType>) {
       state.isLoading = true;
     },
     signOutStart(state) {
       state.isLoading = true;
     },
-    signInSuccess(state, action) {
+    signInSuccess(state, action: PayloadAction<UserStatedata>) {
       state.isLoading = false;
       state.currentUser = action.payload;
     },
@@ -36,15 +46,15 @@ export const userSlice = createSlice({
       state.isLoading = false;
       state.currentUser = null;
     },
-    signInFailed(state, action) {
+    signInFailed(state, action: PayloadAction<Error>) {
       state.isLoading = false;
       state.error = action.payload;
     },
-    signUpFailed(state, action) {
+    signUpFailed(state, action: PayloadAction<Error>) {
       state.isLoading = false;
       state.error = action.payload;
     },
-    signOutFailed(state, action) {
+    signOutFailed(state, action: PayloadAction<Error>) {
       state.isLoading = false;
       state.error = action.payload;
     },
