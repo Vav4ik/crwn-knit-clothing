@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 
 import {
   Footer,
@@ -9,8 +9,13 @@ import {
 import Button, { BUTTON_TYPE_CLASSES } from "../button/button.component";
 import { addItemToCart } from "../../store/cart/cart.slice";
 import { useDispatch } from "react-redux";
+import { ItemType } from "../../store/categories/categories.types";
 
-const ProductCard = ({ product }) => {
+type ProductCardProps = {
+  product: ItemType
+}
+
+const ProductCard: FC<ProductCardProps> = ({ product }) => {
   const dispatch = useDispatch();
   const { name, price, imageUrl } = product;
 

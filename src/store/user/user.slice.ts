@@ -1,13 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-import { SignAfterSignUpInType, UserStatedata } from "./user.types";
+import { SignAfterSignUpInType, UserEmailSignInType, UserEmailSignUpType, UserStatedata } from "./user.types";
 
 // Define a type for the slice state
 interface UserState {
   currentUser: UserStatedata | null;
   isLoading: boolean;
-  error: Error | null;
+  error: string | null;
 }
 
 const INITIAL_STATE: UserState = {
@@ -26,10 +26,10 @@ export const userSlice = createSlice({
     googleSignInStart(state) {
       state.isLoading = true;
     },
-    emailSignInStart(state) {
+    emailSignInStart(state, action: PayloadAction<UserEmailSignInType>) {
       state.isLoading = true;
     },
-    signUpStart(state) {
+    signUpStart(state, action: PayloadAction<UserEmailSignUpType>) {
       state.isLoading = true;
     },
     signUpSuccess(state, action: PayloadAction<SignAfterSignUpInType>) {
@@ -46,15 +46,15 @@ export const userSlice = createSlice({
       state.isLoading = false;
       state.currentUser = null;
     },
-    signInFailed(state, action: PayloadAction<Error>) {
+    signInFailed(state, action: PayloadAction<string>) {
       state.isLoading = false;
       state.error = action.payload;
     },
-    signUpFailed(state, action: PayloadAction<Error>) {
+    signUpFailed(state, action: PayloadAction<string>) {
       state.isLoading = false;
       state.error = action.payload;
     },
-    signOutFailed(state, action: PayloadAction<Error>) {
+    signOutFailed(state, action: PayloadAction<string>) {
       state.isLoading = false;
       state.error = action.payload;
     },

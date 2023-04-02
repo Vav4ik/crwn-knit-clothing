@@ -1,13 +1,18 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { ChangeEvent, FormEvent, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import { ButtonsContainer, SignInContainer } from "./sign-in-form.styles";
+import {
+  AlertParagraph,
+  ButtonsContainer,
+  SignInContainer,
+} from "./sign-in-form.styles";
 import Button, { BUTTON_TYPE_CLASSES } from "../button/button.component";
 import FormInput from "../form-input/form-input.component";
 import {
   emailSignInStart,
   googleSignInStart,
 } from "../../store/user/user.slice";
+import { selecUserError } from "../../store/user/user.selector";
 
 const defaultFormFields = {
   email: "",
@@ -17,29 +22,20 @@ const defaultFormFields = {
 const SignInForm = () => {
   const dispatch = useDispatch();
 
+  const error = useSelector(selecUserError);
+
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { email, password } = formFields;
 
-  const formChangeHandler = (event) => {
+  const formChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormFields((prevFormFields) => ({ ...prevFormFields, [name]: value }));
   };
 
-  const submitHandler = async (event) => {
+  const submitHandler = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    try {
-      dispatch(emailSignInStart({ email, password }));
-      setFormFields(defaultFormFields);
-    } catch (error) {
-      if (
-        error.code === "auth/wrong-password" ||
-        error.code === "auth/user-not-found"
-      ) {
-        alert("Wrong Email or Password!");
-        return;
-      }
-      console.log(error.message);
-    }
+    dispatch(emailSignInStart({ email, password }));
+    setFormFields(defaultFormFields);
   };
 
   const signInWithGoogle = () => {
@@ -50,6 +46,7 @@ const SignInForm = () => {
     <SignInContainer>
       <h2>Already have an account?</h2>
       <span>Sign up with your email and password</span>
+      {error && <AlertParagraph>{error}</AlertParagraph>}
       <form onSubmit={submitHandler}>
         <FormInput
           label="Email"

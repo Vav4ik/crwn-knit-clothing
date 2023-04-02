@@ -1,5 +1,5 @@
 import { PayloadAction } from "@reduxjs/toolkit";
-import { User } from "firebase/auth";
+import { AuthError, AuthErrorCodes, User } from "firebase/auth";
 import { takeLatest, all, call, put } from "typed-redux-saga/macro";
 
 import {
@@ -41,7 +41,7 @@ export function* getSnapshotFromUserAuth(
       );
     }
   } catch (error) {
-    yield* put(signInFailed(error as Error));
+    yield* put(signInFailed("Error fetching user data"));
   }
 }
 
@@ -50,7 +50,7 @@ export function* signInWithGoogle() {
     const { user } = yield* call(signInWithGooglePopup);
     yield* call(getSnapshotFromUserAuth, user);
   } catch (error) {
-    yield* put(signInFailed(error as Error));
+    yield* put(signInFailed("Error Signing In with GOOGLE"));
   }
 }
 
@@ -69,7 +69,14 @@ export function* signInWithEmail({
       yield* call(getSnapshotFromUserAuth, user);
     }
   } catch (error) {
-    yield* put(signInFailed(error as Error));
+    if (
+      (error as AuthError).code === AuthErrorCodes.INVALID_PASSWORD ||
+      (error as AuthError).code === AuthErrorCodes.USER_MISMATCH
+    ) {
+      yield* put(signInFailed("Wrong Email or Password!"));
+    } else {
+      yield* put(signInFailed("Sign In Failed! Try again."));
+    }
   }
 }
 
@@ -79,7 +86,7 @@ export function* isUserAuthenticated() {
     if (!userAuth) return;
     yield* call(getSnapshotFromUserAuth, userAuth);
   } catch (error) {
-    yield* put(signInFailed(error as Error));
+    yield* put(signInFailed("Problem Signing In!"));
   }
 }
 
@@ -100,7 +107,12 @@ export function* signUp({
       yield* put(signUpSuccess({ user, additionalDetails: { displayName } }));
     }
   } catch (error) {
-    yield* put(signUpFailed(error as Error));
+    // you need to learn to handle errors properly, this is a mess... sort of
+    if ((error as AuthError).code === AuthErrorCodes.EMAIL_EXISTS) {
+      yield* put(signUpFailed("Email already exists"));
+    } else {
+      yield* put(signUpFailed("Sign Up Failed, please try again!"));
+    }
   }
 }
 
@@ -115,7 +127,7 @@ export function* signOut() {
     yield* call(signOutUser);
     yield* put(signOutSuccess());
   } catch (error) {
-    yield* put(signOutFailed(error as Error));
+    yield* put(signOutFailed("Sign Out Failed..."));
   }
 }
 
